@@ -94,4 +94,7 @@ public class Booking {
     public LocalDateTime getExpiresAt() { return expiresAt; }
     public LocalDateTime getPaidAt() { return paidAt; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void holdUntil(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
 }

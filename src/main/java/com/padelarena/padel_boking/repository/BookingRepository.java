@@ -3,6 +3,7 @@ package com.padelarena.padel_boking.repository;
 import com.padelarena.padel_boking.model.Booking;
 import com.padelarena.padel_boking.model.BookingStatus;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("delete from Booking b where b.status = :status and b.expiresAt < :now")
     int deleteExpired(@Param("status") BookingStatus status, @Param("now") LocalDateTime now);
+
+    // Cari pesanan HANYA kalau milik user ini
+    Optional<Booking> findByIdAndUserId(Long id, Long userId);
 }

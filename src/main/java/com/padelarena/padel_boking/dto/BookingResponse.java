@@ -12,8 +12,10 @@ public record BookingResponse(
         int startHour,
         int durationHours,
         String status,
+        String paymentMethod,
         int totalPrice,
-        LocalDateTime expiresAt) {
+        LocalDateTime expiresAt,
+        LocalDateTime paidAt) {
 
     public static BookingResponse from(Booking b) {
         return new BookingResponse(
@@ -24,7 +26,9 @@ public record BookingResponse(
                 b.getStartHour(),
                 b.getDurationHours(),
                 b.getStatus().name(),
+                b.getPaymentMethod() == null ? null : b.getPaymentMethod().name(),
                 b.getTotalPrice(),
-                b.getExpiresAt());
+                b.getExpiresAt(),
+                b.getPaidAt());
     }
 }

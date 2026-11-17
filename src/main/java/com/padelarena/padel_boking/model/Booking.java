@@ -97,4 +97,24 @@ public class Booking {
     public void holdUntil(LocalDateTime expiresAt) {
         this.expiresAt = expiresAt;
     }
+
+        public void markPending(PaymentMethod method, int newTotalPrice, LocalDateTime expiresAt) {
+        this.status = BookingStatus.PENDING;
+        this.paymentMethod = method;
+        this.totalPrice = newTotalPrice;
+        this.expiresAt = expiresAt;
+    }
+
+    public void markPaid(LocalDateTime paidAt) {
+        this.status = BookingStatus.PAID;
+        this.paidAt = paidAt;
+    }
+
+    public void markFailed() {
+        this.status = BookingStatus.FAILED;
+    }
+
+    public void markExpired() {
+        this.status = BookingStatus.EXPIRED;
+    }
 }

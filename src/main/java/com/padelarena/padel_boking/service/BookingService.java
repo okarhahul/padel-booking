@@ -9,7 +9,6 @@ import com.padelarena.padel_boking.dto.BookingResponse;
 import com.padelarena.padel_boking.dto.CreateBookingRequest;
 import com.padelarena.padel_boking.model.Booking;
 import com.padelarena.padel_boking.model.BookingSlot;
-import com.padelarena.padel_boking.model.BookingStatus;
 import com.padelarena.padel_boking.model.Court;
 import com.padelarena.padel_boking.model.User;
 import com.padelarena.padel_boking.repository.BookingRepository;
@@ -35,15 +34,18 @@ public class BookingService {
     private final BookingSlotRepository slotRepository;
     private final CourtRepository courtRepository;
     private final UserRepository userRepository;
+    private final HoldCleanupService holdCleanupService;
 
     public BookingService(BookingRepository bookingRepository,
                           BookingSlotRepository slotRepository,
                           CourtRepository courtRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          HoldCleanupService holdCleanupService) {
         this.bookingRepository = bookingRepository;
         this.slotRepository = slotRepository;
         this.courtRepository = courtRepository;
         this.userRepository = userRepository;
+        this.holdCleanupService = holdCleanupService;
     }
 
     @Transactional
@@ -70,8 +72,9 @@ public class BookingService {
             throw bad("Jam tersebut sudah lewat");
         }
 
-        // Bersihkan hold lama yang kedaluwarsa supaya jamnya bisa dipesan lagi
-        bookingRepository.deleteExpired(BookingStatus.HOLD, now);
+        // Lepas dulu hold lama yang kedaluwarsa, supaya jamnya bisa dipesan lagi
+        // tanpa menunggu putaran scheduler berikutnya.
+        holdCleanupService.releaseExpired();
 
         int subtotal = 0;
         for (int h = start; h <= last; h++) {

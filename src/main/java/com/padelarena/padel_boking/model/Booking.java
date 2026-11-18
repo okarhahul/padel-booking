@@ -117,4 +117,8 @@ public class Booking {
     public void markExpired() {
         this.status = BookingStatus.EXPIRED;
     }
+
+    public void markCancelled() {
+        this.status = BookingStatus.CANCELLED;
+    }
 }

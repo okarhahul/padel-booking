@@ -32,4 +32,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @EntityGraph(attributePaths = "court")
     Page<Booking> findByUserIdAndStatus(Long userId, BookingStatus status, Pageable pageable);
+
+    // Untuk admin: semua pesanan. EntityGraph mengambil lapangan dan user sekaligus.
+    @EntityGraph(attributePaths = {"court", "user"})
+    Page<Booking> findAllBy(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"court", "user"})
+    Page<Booking> findByStatus(BookingStatus status, Pageable pageable);
 }
